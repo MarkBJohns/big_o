@@ -181,7 +181,7 @@ function printAllPairs(num){
 
 // ================================================================================================================
 
-//      DETERMINING COMPLEXITY
+//      DETERMINING COMPLEXITY - WORST CASE SCENARIO
 
 // ==============================================================
 
@@ -207,8 +207,181 @@ const arrayThree=[
     42,44,46,48,50,52,54,56,58,60,62,64,66,68,70,72,74,76,78,
     80,82,84,86,88,90,92,94,96,98,100,1
 ]
-
-
 const evenTestOne=allEvens(arrayOne);
 const evenTestTwo=allEvens(arrayTwo);
 const evenTestThree=allEvens(arrayThree);
+
+// Initially, you would think that the O complexity would be linear, given that there's an extra loop iteration
+//      added for every new array index, but note that there's a conditional. This means that if there's an
+//      array with one million numbers, but the very first number is odd, the function immediately ends with
+//      one loop iteration.
+
+//      However, the idea of the O complexity is to determine the worst case scenario. It's not important that
+//      your function will run efficiently under completely perfect circumstances, it's important the the code
+//      work efficiently even when stretched into an edge case. Because our worst case scenario would be a
+//      massive array with the very last number being odd, we have to determine the O complexity based on that.
+//      So the initial assumption was correct, this function has an O(n) complexity.
+
+// ================================================================================================================
+
+//      SIMPLIFYING THE PROCESS
+
+// ==============================================================
+
+// Given that Big O is designed to be a very simple overview of what type of function you're looking at, it's
+//      important to keep in mind that specificity can actually be a detriment. You don't want to get too hung
+//      up on the exact execution growth rate, you should just have a simple snapshot of it.
+
+// --------------------------------------------------------------
+
+//          1. Constants do not matter -
+//                Remembering how addUpToSecond had three operations, but a complexity of O(1), the 1 doesn't
+//                represent the amount of operations, just the rate at which execution grows based on the input
+//                size. So even a function with 5000 operations will still be O(1), provided that the size of
+//                the input doesn't add any more operations.
+
+// --------------------------------------------------------------
+
+//          2. Smaller terms do not matter -
+//                If the complexity is technically something like O(n^2+n), the '+n' isn't important in the 
+//                grand scheme of things, so the complexity would just be O(n^2).
+
+// --------------------------------------------------------------
+
+//          3. Basic arithmetic is constant -
+//                Any math function that doesn't dynamically generate new values to run operations on will be
+//                O(1). Note how addUpToFirst() uses a loop, which adds an operation for every increased value
+//                of the input, is not constant, while addUpToSecond(), which only has a single mathematical
+//                formula regardless of how big the numbers are, is constant.
+
+// --------------------------------------------------------------
+
+//          4. Variable assignment is constant -
+//                If you have function that assigns a value to a variable, something like:
+
+function makeVariable(value){
+  const newVar=value;
+  return newVar;
+}
+
+//                no matter how big the value is, it's still a single operation, and a constant function.
+
+// --------------------------------------------------------------
+
+//          5. Accessing elements in an array/object is constant -
+//                If you have a function that takes out and element, something like:
+
+function thirdIndex(arr){
+  return arr[2];
+}
+
+//                calling that index is constant, even if the array is massive and you're calling the 500th
+//                index.
+
+// --------------------------------------------------------------
+
+//          6. Loops: lengthOfLoop x complexity -
+//                Because loops have various uses, you have to look at the specifics before determining the
+//                complexity of a looping function:
+
+function linearFunction(arr){
+  for(let num of arr){
+    console.log(num);
+}}
+
+//                This function is linear, because the amount of loops grows proportionately with the increase
+//                in the input value.
+
+function quadraticFunction(arr){
+  for(let num of arr){
+    for(let i=0;i<=num;i++){
+      console.log(`${num}, ${i}`);
+}}}
+
+//                This function is quadratic, because the amount of operations squares for each additonal value
+//                increment.
+
+// ================================================================================================================
+
+//      BIG O AND LOGS
+
+// ==============================================================
+
+
+// As a general rule the most efficient complexities are, from best to worst:
+
+//  Excellent/Good:
+
+//      1. O(1) and O(log n) - Constant and Logarithmic
+//      2. O(n) - Linear
+
+//  Fair:
+//      3. O(n log n) - Linearithmic
+
+//  Bad:
+//      4. O(n^2) - Quadratic
+
+//  Horrible:
+//      5. O(2^n) - Exponential
+//      6. O(n!) - Factoral
+
+// --------------------------------------------------------------
+
+// As a math refresher, 'log' is a way to write math problems given a certain 'base'. A base is how many
+//      increments are needed to go to a new digit. For example, common math has base of ten, because there 
+//      are ten digits (including 0) to increment through before you reach a double digit number. For Big O, we
+//      have a base of 2 (binary code, 1s and 0s).
+
+// As an example, log(of 2)8 means 2 to the power of what equals 8, which in this case is 3. In other words, a
+//      logarithm measures roughly how many times you can divide a number by its base before you get a value 
+//      equal or less than 1.
+
+// --------------------------------------------------------------
+
+// To see how a function's amount of operations would grow based on the input size, let's take an input of 100:
+
+// Constant (1) - 1,    Logarithmic (log n) - apprx 7,    Linear (n) - 100,    
+//      Logarithmic (n log n) - apprx 664,    Quadratic (n^2) - 10,000,
+// Exponential (2^n) - 1,267,650,600,228,229,401,496,703,205,376,    Factoral (n!) - apprx 9.332622*10^157
+
+//      You can imagine just based on the size of the numbers which type of function runs faster than others.
+
+// ================================================================================================================
+
+//      SPACE COMPLEXITY
+
+// ==============================================================
+
+// While less common, Big O can also be used to analyze the amount of space an algorithm will take up as the 
+//      input size increases. To better assess this, we need to keep some basics in mind:
+
+// Primitives - Constant:
+//      things like booleans, numbers, undefined, and null take up the same amount of space regardless of
+//      context
+
+// Strings - Linear:
+//      strings will take up more or less space depending on how many characters there are
+
+// Reference types - Linear:
+//      arrays and objects will take up more or less space depending on the length of the array or amount of
+//      keys
+
+// --------------------------------------------------------------
+
+function sum(arr){
+  let total=0;
+  for(let i=0;i<arr.length;i++){
+    total+=arr[i];
+  }
+  return total;
+}
+
+// This function has a space complexity of O(1), because the output is a single value.
+
+function double(arr){
+  let doubled=[];
+  for(let i=0;i<arr.length;i++){
+    doubled.push(arr[i]*2);
+  }
+  return doubled;
+}
